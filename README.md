@@ -22,9 +22,11 @@ For integration tests - which will be run with the PC connected to the device - 
 
 # Effort breakdown
 
-- Setting up an empty repository (ssh keys, .gitignore, README.md): 1h
-- ZephyrRTOS setup: 
+- Repository setup (ssh keys, .gitignore, README.md): 1h
+- ZephyrRTOS setup (CMake files, main.c, first build, hello world): 0.5h
+- USB Comm Device side (usb_comm.h + troubleshooting): 3h
+- USB Comm PC side (usb_comm.py): 1.5h
 
-- Total: 1h
+- Total: 6h
 
 # Other remarks
