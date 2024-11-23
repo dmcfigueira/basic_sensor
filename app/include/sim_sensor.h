@@ -15,22 +15,29 @@ typedef enum {
     // The sensor will repeatedly return a the same value until
     // a certain number of samples is reached.
     // arg1: constant value
-    // arg2: the number of samples to be produced (infinite if 0)
+    // arg2: number of samples
     PATTERN_CONST = 0,
 
     // The sensor will repeatedly return a value that is increased
     // by a constant amount until a maximum value is reached.
-    // arg1: The initial value
-    // arg2: The increment amount for each sample
-    // arg3: The maximum value (inclusive)
+    // arg1: initial value
+    // arg2: increment amount
+    // arg3: maximum value (inclusive)
     PATTERN_INCREASING = 1,
 
     // The sensor will repeatedly return a value that is decreased
     // by a constant amount until a minimum value is reached.
-    // arg1: The initial value
-    // arg2: The decrement amount for each sample
-    // arg3: The minimum value (inclusive)
-    PATTERN_DECREASING = 2
+    // arg1: initial value
+    // arg2: decrement amount
+    // arg3: minimum value (inclusive)
+    PATTERN_DECREASING = 2,
+
+    // The sensor will repeatedly return a random value within a
+    // given range until a certain number of samples is reached.
+    // arg1: minimum value
+    // arg2: maximum value
+    // arg3: number of samples
+    PATTERN_RANDOM = 3,
 } sim_sensor_pattern_t;
 
 /**

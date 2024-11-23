@@ -9,6 +9,7 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include <zephyr/random/random.h>
 
 #include <math.h>
 #include <memory.h>
@@ -54,6 +55,17 @@ static float sim_sensor_pattern_decreasing(simulation_ctx_t* ctx) {
     return (value >= min_value) ? value : NAN;
 }
 
+static float sim_sensor_pattern_random(simulation_ctx_t* ctx) {
+    float min_value = ctx->arg1;
+    float max_value = ctx->arg2;
+    int n_samples   = ctx->arg3;
+    // Produce a random value withing the given range with a resolution of 0.1
+    int rand_interval = (int) ((max_value - min_value) * 10);
+    int rand_value    = sys_rand32_get() % rand_interval;
+    float value       = min_value + rand_value / 10.0f;
+    return (ctx->sample_index < n_samples) ? value : NAN;
+}
+
 /* Other functions */
 void sim_sensor_set_data_rate(uint16_t data_rate) {
     sample_period = 1000 / data_rate;
@@ -69,6 +81,7 @@ void sim_sensor_start_pattern(sim_sensor_pattern_t pattern, float arg1, float ar
         case PATTERN_CONST: pattern_fn = sim_sensor_pattern_const; break;
         case PATTERN_INCREASING: pattern_fn = sim_sensor_pattern_increasing; break;
         case PATTERN_DECREASING: pattern_fn = sim_sensor_pattern_decreasing; break;
+        case PATTERN_RANDOM: pattern_fn = sim_sensor_pattern_random; break;
         default: pattern_fn = NULL; break;
     }
 
