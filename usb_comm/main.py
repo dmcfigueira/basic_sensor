@@ -23,7 +23,7 @@ def wait_for_usb_connection():
         try:
             usb.close()
             time.sleep(1)
-            usb.init()
+            usb.init(sys.argv[1] if len(sys.argv) > 1 else None)
             break
         except Exception as e:
             if not "Errno 2" in str(e):
@@ -38,7 +38,7 @@ def usb_rx_loop():
 
             while True:
                 # Read and print any data sent over USB
-                data = usb.read()
+                data = usb.read().strip()
                 if data:
                     print(f"> {data.decode('utf-8')}")
 
@@ -65,7 +65,7 @@ def main():
     while (True):
         try:
             # Wait for a command from the user
-            usr_cmd = sys.stdin.readline().rstrip()
+            usr_cmd = sys.stdin.readline().strip()
 
             # Terminate the app if the user chooses to quit
             if usr_cmd == "exit" or usr_cmd == "quit" or usr_cmd == "q":

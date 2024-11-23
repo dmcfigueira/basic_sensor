@@ -14,8 +14,6 @@ For development I'll be using VSCode on a Linux PC, and the [nRF Connect SDK](ht
 
 To interact with the device over USB I'll be using some basic Python code.
 
-For unit tests - which will be run on the PC - I'll be using [GoogleTest](http://google.github.io/googletest/primer.html).
-
 For integration tests - which will be run with the PC connected to the device - I'll be using [PyTest](https://docs.pytest.org/en/stable/).
 
 # Usage
@@ -23,10 +21,12 @@ For integration tests - which will be run with the PC connected to the device - 
 # Effort breakdown
 
 - Repository setup (ssh keys, .gitignore, README.md): 1h
-- ZephyrRTOS setup (CMake files, main.c, first build, hello world): 0.5h
+- ZephyrRTOS setup (CMake files, main.c, first build): 0.5h
 - USB Comm Device side (usb_comm.h + troubleshooting): 3h
 - USB Comm PC side (usb_comm.py): 1.5h
+- Sensor simulation functions (sim_sensor.h + troubleshooting): 4h
+- USB Commands: 
 
-- Total: 6h
+- Total: 10h
 
 # Other remarks
