@@ -6,8 +6,9 @@
  * @author Daniel Figueira <daniel.castro.figueira@gmail.com>
  */
 
+#include "command_parser.h"
 #include "led.h"
-#include "sim_sensor.h"
+#include "sensor_thread.h"
 #include "usb_comm.h"
 
 #include <zephyr/kernel.h>
@@ -17,6 +18,8 @@
 #include <stdio.h>
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
+
+#define COMMAND_BUFFER_SIZE 64
 
 int init_board(void) {
     // Initialize the board leds
@@ -47,15 +50,17 @@ int main(void) {
     // Turn on the board led (to indicate the board is ready)
     led_on();
 
+    LOG_INF("Waiting for commands...");
+
     // Start the main loop
     while (true) {
-        uint8_t buffer[64] = {0};
-        size_t n_bytes     = 0;
+        uint8_t buffer[COMMAND_BUFFER_SIZE + 1] = {0};
+        command_t command                       = {0};
+        size_t n_bytes                          = 0;
 
         // Check if any data was received over USB
-        ret = usb_comm_read(buffer, 64, &n_bytes);
+        ret = usb_comm_read(buffer, COMMAND_BUFFER_SIZE, &n_bytes);
         if (ret != 0) {
-            LOG_ERR("Failed to received data over USB");
             break;
         }
 
@@ -65,22 +70,16 @@ int main(void) {
             continue;
         }
 
-        // Start some pattern
-        sim_sensor_start_pattern(PATTERN_CONST, 1, 5, 0);
+        // Parse the command received
+        ret = command_parse(buffer, &command);
+        if (ret != 0) {
+            continue;
+        }
 
-        float sample = sim_sensor_read_sample();
-        while (!isnan(sample)) {
-            n_bytes = snprintf((char*) buffer, sizeof(buffer), "%.1f\n", sample);
-
-            // Send the sample over USB (as text)
-            ret = usb_comm_write(buffer, n_bytes);
-            if (ret != 0) {
-                LOG_ERR("Failed to send data over USB");
-                break;
-            }
-
-            sample = sim_sensor_read_sample();
-            k_msleep(500);
+        // Execute the command
+        ret = command_execute(&command);
+        if (ret != 0) {
+            continue;
         }
     }
 

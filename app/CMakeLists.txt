@@ -13,6 +13,7 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(app)
 
 # Compiler options
+set(LDFLAGS "${LDFLAGS} -u _scanf_float")
 target_compile_options(app PRIVATE -Wall -Werror)
 
 # Header files

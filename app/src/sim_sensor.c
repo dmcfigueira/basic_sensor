@@ -56,7 +56,7 @@ static float sim_sensor_pattern_decreasing(simulation_ctx_t* ctx) {
 
 /* Other functions */
 void sim_sensor_set_data_rate(uint16_t data_rate) {
-    sample_period = 1 / data_rate;
+    sample_period = 1000 / data_rate;
     LOG_INF("Data rate set to %d Hz (new sample period: %d ms)", data_rate, sample_period);
 };
 

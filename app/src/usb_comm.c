@@ -89,13 +89,17 @@ int usb_comm_read(uint8_t* buffer, size_t buffer_len, size_t* n_bytes) {
     for (int i = 0; ret == 0; i++) {
         // Check if the buffer is full
         if (i >= buffer_len) {
+            LOG_ERR("Failed to read USB data: buffer full");
             return -ENOBUFS;
         }
 
         // Read the next byte from the UART
         ret = uart_poll_in(uart_dev, &buffer[i]);
-        if (ret < 0) {
-            return (ret == -1) ? 0 : ret;
+        if (ret == -1) {
+            return 0;   // No data
+        } else if (ret < 0) {
+            LOG_ERR("Failed to read USB data (err: %d - %s)", ret, strerror(-ret));
+            return ret;
         }
 
         (*n_bytes)++;

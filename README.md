@@ -25,8 +25,12 @@ For integration tests - which will be run with the PC connected to the device - 
 - USB Comm Device side (usb_comm.h + troubleshooting): 3h
 - USB Comm PC side (usb_comm.py): 1.5h
 - Sensor simulation functions (sim_sensor.h + troubleshooting): 4h
-- USB Commands: 
+- USB Commands (command_parser.h + troubleshooting): 2h
+- Integration tests (pytest): 
+- Ring buffer implementation: 
+- Sensor thread: 0.5h
+- Data thread: 
 
-- Total: 10h
+- Total: 11.5h
 
 # Other remarks
