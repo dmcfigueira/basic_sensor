@@ -16,6 +16,9 @@
 
 LOG_MODULE_REGISTER(sim_sensor, LOG_LEVEL_INF);
 
+/* Constants */
+#define DEFAULT_DATA_RATE 1   // Hz
+
 /* Type definitions */
 typedef struct {
     int64_t last_sample_start_time;   // ms
@@ -28,7 +31,7 @@ typedef struct {
 typedef float (*sim_sensor_pattern_fn)(simulation_ctx_t* ctx);
 
 /* Static variables */
-static uint16_t sample_period           = 1000;   // ms (1 sample per second by default)
+static uint16_t sample_period           = 1000 / DEFAULT_DATA_RATE;   // ms
 static sim_sensor_pattern_fn pattern_fn = {0};
 static simulation_ctx_t sim_ctx         = {0};
 
@@ -61,14 +64,14 @@ static float sim_sensor_pattern_random(simulation_ctx_t* ctx) {
     int n_samples   = ctx->arg3;
     // Produce a random value withing the given range with a resolution of 0.1
     int rand_interval = (int) ((max_value - min_value) * 10);
-    int rand_value    = sys_rand32_get() % rand_interval;
+    int rand_value    = (rand_interval > 0) ? sys_rand32_get() % rand_interval : 0;
     float value       = min_value + rand_value / 10.0f;
-    return (ctx->sample_index < n_samples) ? value : NAN;
+    return (ctx->sample_index < n_samples && rand_interval >= 0) ? value : NAN;
 }
 
 /* Other functions */
 void sim_sensor_set_data_rate(uint16_t data_rate) {
-    sample_period = 1000 / data_rate;
+    sample_period = (data_rate < 1000) ? 1000 / data_rate : 1;
     LOG_INF("Data rate set to %d Hz (new sample period: %d ms)", data_rate, sample_period);
 };
 
@@ -114,7 +117,7 @@ float sim_sensor_read_sample(void) {
 
     // Generate the next sample
     float sample = pattern_fn(&sim_ctx);
-    LOG_DBG("[%d]: %.1f", sim_ctx.sample_index, sample);
+    LOG_INF("[%d]: %.1f", sim_ctx.sample_index, sample);
 
     // Stop the pattern if NaN was returned
     if (isnan(sample)) {

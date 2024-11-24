@@ -35,7 +35,7 @@ typedef enum {
     // The sensor will repeatedly return a random value within a
     // given range until a certain number of samples is reached.
     // arg1: minimum value
-    // arg2: maximum value
+    // arg2: maximum value (inclusive)
     // arg3: number of samples
     PATTERN_RANDOM = 3,
 } sim_sensor_pattern_t;

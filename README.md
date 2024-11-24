@@ -18,6 +18,8 @@ For integration tests - which will be run with the PC connected to the device - 
 
 # Usage
 
+
+
 # Effort breakdown
 
 - Repository setup (ssh keys, .gitignore, README.md): 1h
@@ -26,11 +28,13 @@ For integration tests - which will be run with the PC connected to the device - 
 - USB Comm PC side (usb_comm.py): 1.5h
 - Sensor simulation functions (sim_sensor.h + troubleshooting): 4h
 - USB Commands (command_parser.h + troubleshooting): 2h
-- Integration tests (pytest): 
+- PyTest setup: 0.5h
+- Sensor simulation tests: 2h
+- Bugfixing: 1.5h
 - Ring buffer implementation: 
 - Sensor thread: 0.5h
 - Data thread: 
 
-- Total: 11.5h
+- Total: 14.5h 
 
 # Other remarks
