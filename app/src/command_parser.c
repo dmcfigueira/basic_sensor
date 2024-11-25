@@ -56,7 +56,7 @@ int command_execute(command_t* command) {
         case COMMAND_SET_SEND_RATE: LOG_INF("Command not implemented yet."); break;   // TODO
         case COMMAND_START_PATTERN:
             sim_sensor_start_pattern((sim_sensor_pattern_t) command->args[0], command->args[1], command->args[2], command->args[3]);
-            return sensor_thread_read_sensor_data();
+            break;
         default: LOG_ERR("Invalid command type: %d", command->type); return -EINVAL;
     }
     return 0;

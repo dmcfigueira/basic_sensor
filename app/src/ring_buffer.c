@@ -11,16 +11,24 @@
  */
 #include "ring_buffer.h"
 
+#include <zephyr/logging/log.h>
+
 #include <errno.h>
 
-/* Type definitions */
-struct _ring_buffer_t {
-    uint8_t items[RING_BUFFER_MAX_ITEMS][RING_BUFFER_ITEM_SIZE];
-    uint8_t sizes[RING_BUFFER_MAX_ITEMS];
-    uint16_t start_idx;
-    uint16_t end_idx;
-    uint16_t n_items;
-};
+LOG_MODULE_REGISTER(ring_buffer, LOG_LEVEL_INF);
+
+/*
+ * Note that no synchronization mechanisms are needed to manage access to the
+ * ring buffer, even though we'll have multiple threads reading/writing to it.
+ *
+ * This is because while our application has multiple threads, these will be
+ * run on a single core and therefore only one thread will be actually run
+ * at any given time (see multi-threading vs parallelism).
+ *
+ * As such, it will be fine as long as we don't give-up the CPU to another thread
+ * (by calling some OS function like 'k_sleep' or 'k_yield') mid-way through
+ * accessing or modifying items from the ring buffer.
+ */
 
 int ring_buffer_add(ring_buffer_t* buffer, void* item, uint8_t item_size) {
     if (buffer == NULL || item == NULL) {
@@ -63,7 +71,6 @@ int ring_buffer_get(ring_buffer_t* buffer, void* item, uint8_t* item_size) {
     }
 
     // Update the end index
-    memcpy(buffer->items[buffer->end_idx], item, item_size);
     buffer->end_idx = (buffer->end_idx > 0 ? buffer->end_idx : RING_BUFFER_MAX_ITEMS) - 1;
 
     // Copy the oldest item

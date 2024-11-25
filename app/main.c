@@ -8,6 +8,7 @@
 
 #include "command_parser.h"
 #include "led.h"
+#include "ring_buffer.h"
 #include "sensor_thread.h"
 #include "usb_comm.h"
 
@@ -40,12 +41,17 @@ int init_board(void) {
 }
 
 int main(void) {
+    ring_buffer_t ring_buffer = {0};
+
     // Initialize the board
     int ret = init_board();
     if (ret != 0) {
         LOG_ERR("Failed to initialize the board");
         return ret;
     }
+
+    // Start the sensor thread
+    sensor_thread_start(&ring_buffer);
 
     // Turn on the board led (to indicate the board is ready)
     led_on();

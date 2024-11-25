@@ -20,10 +20,13 @@
 #define RING_BUFFER_ITEM_SIZE 10   // max: 255 bytes
 
 /* Type definitions */
-
-// Forward declaration the struct only
-// (keeping the implementation details hidden)
-typedef struct _ring_buffer_t ring_buffer_t;
+typedef struct {
+    uint8_t items[RING_BUFFER_MAX_ITEMS][RING_BUFFER_ITEM_SIZE];
+    uint8_t sizes[RING_BUFFER_MAX_ITEMS];
+    uint16_t start_idx;
+    uint16_t end_idx;
+    uint16_t n_items;
+} ring_buffer_t;
 
 /**
  * @brief Add a new item to the ring buffer. This will copy the item to the buffer,

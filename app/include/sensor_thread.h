@@ -8,6 +8,8 @@
  */
 #pragma once
 
+#include "ring_buffer.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -19,5 +21,9 @@
  */
 void sensor_thread_set_read_rate(uint16_t read_rate);
 
-// TODO: change this
-int sensor_thread_read_sensor_data(void);
+/**
+ * @brief Start the sensor thread.
+ *
+ * @param ring_buffer The ring buffer used to store the sensor data.
+ */
+void sensor_thread_start(ring_buffer_t* ring_buffer);
