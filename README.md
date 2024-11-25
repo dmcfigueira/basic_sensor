@@ -31,7 +31,7 @@ For integration tests - which will be run with the PC connected to the device - 
 - PyTest setup: 0.5h
 - Sensor simulation tests: 2h
 - Bugfixing: 1.5h
-- Ring buffer implementation: 
+- Ring buffer implementation: 1h
 - Sensor thread: 0.5h
 - Data thread: 
 
