@@ -7,6 +7,7 @@
  */
 #include "command_parser.h"
 
+#include "data_thread.h"
 #include "sensor_thread.h"
 #include "sim_sensor.h"
 
@@ -53,7 +54,7 @@ int command_execute(command_t* command) {
     switch (command->type) {
         case COMMAND_SET_DATA_RATE: sim_sensor_set_data_rate(command->args[0]); break;
         case COMMAND_SET_READ_RATE: sensor_thread_set_read_rate(command->args[0]); break;
-        case COMMAND_SET_SEND_RATE: LOG_INF("Command not implemented yet."); break;   // TODO
+        case COMMAND_SET_SEND_RATE: data_thread_set_send_rate(command->args[0]); break;
         case COMMAND_START_PATTERN:
             sim_sensor_start_pattern((sim_sensor_pattern_t) command->args[0], command->args[1], command->args[2], command->args[3]);
             break;

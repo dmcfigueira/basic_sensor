@@ -1,12 +1,14 @@
 /**
  * Created on Wed Nov 20 2024
  *
- * @brief Application entry point.
+ * @brief Application entry point and main thread. Handles the initialization
+ *        of the device and the reception of commands over USB.
  *
  * @author Daniel Figueira <daniel.castro.figueira@gmail.com>
  */
 
 #include "command_parser.h"
+#include "data_thread.h"
 #include "led.h"
 #include "ring_buffer.h"
 #include "sensor_thread.h"
@@ -14,9 +16,6 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-
-#include <math.h>
-#include <stdio.h>
 
 LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 
@@ -52,6 +51,9 @@ int main(void) {
 
     // Start the sensor thread
     sensor_thread_start(&ring_buffer);
+
+    // Start the data thread
+    data_thread_start(&ring_buffer);
 
     // Turn on the board led (to indicate the board is ready)
     led_on();

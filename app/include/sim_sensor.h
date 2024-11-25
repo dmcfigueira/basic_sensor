@@ -48,6 +48,13 @@ typedef enum {
 void sim_sensor_set_data_rate(uint16_t data_rate);
 
 /**
+ * @brief Get the current period between simulated data samples.
+ *
+ * @return The sample period in milliseconds.
+ */
+uint16_t sim_sensor_get_sample_period(void);
+
+/**
  * @brief Start the simulation of a given data pattern. Once the pattern
  *        is started, data will be produced at the data rate set until a
  *        certain stop condition (pattern-specific) is reached, at which
@@ -65,6 +72,13 @@ void sim_sensor_set_data_rate(uint16_t data_rate);
  *       pass them into this function.
  */
 void sim_sensor_start_pattern(sim_sensor_pattern_t pattern, float arg1, float arg2, float arg3);
+
+/**
+ * @brief Check if a new simulated sensor sample is ready to be read.
+ *
+ * @return True if a new sample is ready, false otherwise.
+ */
+bool sim_sensor_new_sample_ready(void);
 
 /**
  * @brief Retrieve a simulated sensor sample. Returns NaN if no simulation

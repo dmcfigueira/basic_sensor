@@ -16,8 +16,8 @@
 #include <stdint.h>
 
 /* Constants */
-#define RING_BUFFER_MAX_ITEMS 10   // max: 65535
-#define RING_BUFFER_ITEM_SIZE 10   // max: 255 bytes
+#define RING_BUFFER_MAX_ITEMS 10              // max: 65535
+#define RING_BUFFER_ITEM_SIZE sizeof(float)   // max: 255 bytes
 
 /* Type definitions */
 typedef struct {

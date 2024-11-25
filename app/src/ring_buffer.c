@@ -65,17 +65,20 @@ int ring_buffer_get(ring_buffer_t* buffer, void* item, uint8_t* item_size) {
         return -EINVAL;
     }
 
+    memset(item, 0, RING_BUFFER_ITEM_SIZE);
+    *item_size = 0;
+
     // Check if the buffer is empty
     if (buffer->n_items == 0) {
         return 0;
     }
 
-    // Update the end index
-    buffer->end_idx = (buffer->end_idx > 0 ? buffer->end_idx : RING_BUFFER_MAX_ITEMS) - 1;
-
     // Copy the oldest item
-    memcpy(item, buffer->items[buffer->end_idx], buffer->sizes[buffer->end_idx]);
-    *item_size = buffer->sizes[buffer->end_idx];
+    memcpy(item, buffer->items[buffer->start_idx], buffer->sizes[buffer->start_idx]);
+    *item_size = buffer->sizes[buffer->start_idx];
+
+    // Update the start index
+    buffer->start_idx = (buffer->start_idx + 1) % RING_BUFFER_MAX_ITEMS;
 
     // Update the number of items
     buffer->n_items--;

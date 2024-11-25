@@ -23,6 +23,7 @@ LOG_MODULE_REGISTER(sim_sensor, LOG_LEVEL_INF);
 typedef struct {
     int64_t last_sample_start_time;   // ms
     uint32_t sample_index;
+    uint32_t samples_read;
     float arg1;
     float arg2;
     float arg3;
@@ -75,6 +76,8 @@ void sim_sensor_set_data_rate(uint16_t data_rate) {
     LOG_INF("Data rate set to %d Hz (new sample period: %d ms)", data_rate, sample_period);
 };
 
+uint16_t sim_sensor_get_sample_period(void) { return sample_period; }
+
 void sim_sensor_start_pattern(sim_sensor_pattern_t pattern, float arg1, float arg2, float arg3) {
     // Clear the current simulation context
     memset(&sim_ctx, 0, sizeof(sim_ctx));
@@ -104,6 +107,10 @@ static uint32_t sim_sensor_compute_samples_elapsed(simulation_ctx_t* ctx) {
     return samples_elapsed;
 }
 
+bool sim_sensor_new_sample_ready(void) {
+    return pattern_fn != NULL && (sim_ctx.samples_read == 0 || k_uptime_get() - sim_ctx.last_sample_start_time >= sample_period);
+}
+
 float sim_sensor_read_sample(void) {
     // Check if there is a pattern ongoing
     if (pattern_fn == NULL) {
@@ -114,6 +121,7 @@ float sim_sensor_read_sample(void) {
     uint32_t samples_elapsed = sim_sensor_compute_samples_elapsed(&sim_ctx);
     sim_ctx.last_sample_start_time += samples_elapsed * sample_period;
     sim_ctx.sample_index += samples_elapsed;
+    sim_ctx.samples_read++;
 
     // Generate the next sample
     float sample = pattern_fn(&sim_ctx);

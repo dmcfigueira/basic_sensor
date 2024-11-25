@@ -35,33 +35,22 @@ PATTERN_RANDOM = 3
 
 ###################### PUBLIC FUNCTIONS ####################
 
-data_rate_modified = False
-read_rate_modified = False
-send_rate_modified = False
+current_data_rate = 0
+current_read_rate = 0
+current_send_rate = 0
 
 def init():
     ''' Initialize the USB connection '''
     # Make the read timeout twice the sample period 
     usb.init(usb.DEFAULT_PORT, 2 / DEFAULT_DATA_RATE)
     time.sleep(USB_CONNECTION_WAIT_PERIOD)
-    set_data_rate(DEFAULT_DATA_RATE, False)
-    set_read_rate(DEFAULT_DATA_RATE, False)
-    set_send_rate(DEFAULT_DATA_RATE, False)
+    set_default_data_rates()
 
-def restore_data_rates():
+def set_default_data_rates():
     ''' Set the default data/read/send rates '''
-    global data_rate_modified
-    global read_rate_modified
-    global send_rate_modified
-    try:
-        if data_rate_modified:
-            set_data_rate(DEFAULT_DATA_RATE, False)
-        if read_rate_modified:
-            set_read_rate(DEFAULT_DATA_RATE, False)
-        if send_rate_modified:
-            set_send_rate(DEFAULT_DATA_RATE, False)
-    except Exception as e:
-        print(f"Error: Failed to restore default data rates: {e}")
+    set_data_rate(DEFAULT_DATA_RATE)
+    set_read_rate(DEFAULT_DATA_RATE)
+    set_send_rate(DEFAULT_DATA_RATE)
 
 def clear_buffers():
     ''' Clear the input and output buffers '''
@@ -83,24 +72,27 @@ def read_data():
 
 def set_data_rate(data_rate, restore=True):
     ''' Set the rate at which the simulated data is produced '''
-    global data_rate_modified
-    usb.send(f"{COMMAND_SET_DATA_RATE} {data_rate}".encode())
-    time.sleep(USB_COMMAND_INTERVAL)
-    data_rate_modified = restore
+    global current_data_rate
+    if data_rate != current_data_rate:
+        usb.send(f"{COMMAND_SET_DATA_RATE} {data_rate}".encode())
+        time.sleep(USB_COMMAND_INTERVAL)
+        current_data_rate = data_rate
 
 def set_read_rate(read_rate, restore=True):
     ''' Set the rate at which the simulated data is read '''
-    global read_rate_modified
-    usb.send(f"{COMMAND_SET_READ_RATE} {read_rate}".encode())
-    time.sleep(USB_COMMAND_INTERVAL)
-    read_rate_modified = restore
+    global current_read_rate
+    if read_rate != current_read_rate:
+        usb.send(f"{COMMAND_SET_READ_RATE} {read_rate}".encode())
+        time.sleep(USB_COMMAND_INTERVAL)
+        current_read_rate = read_rate
 
 def set_send_rate(send_rate, restore=True):
     ''' Set the rate at which the simulated data is sent '''
-    global send_rate_modified
-    usb.send(f"{COMMAND_SET_SEND_RATE} {send_rate}".encode())
-    time.sleep(USB_COMMAND_INTERVAL)
-    send_rate_modified = restore
+    global current_send_rate
+    if send_rate != current_send_rate:
+        usb.send(f"{COMMAND_SET_SEND_RATE} {send_rate}".encode())
+        time.sleep(USB_COMMAND_INTERVAL)
+        current_send_rate = send_rate
 
 def simulate_const_pattern(value, n_samples):
     ''' Start a 'const' pattern simulation '''
