@@ -16,26 +16,63 @@ To interact with the device over USB I'll be using some basic Python code.
 
 For integration tests - which will be run with the PC connected to the device - I'll be using [PyTest](https://docs.pytest.org/en/stable/).
 
-# Usage
+# Building and flashing the project
 
+Install the 'nRF Connect for VS Code' extension as described [here](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/installation/install_ncs.html).
 
+Then:
+
+1) Right click the 'app' folder from VS Code explorer view and select 'nRF Connect: Add Folder as Application'.
+2) Go to the the nRF Connect view and add a new build configuration for the 'app' application.
+3) For the build settings simply select `nrf5340dk_nrf5340_cpuapp` as the board target.
+
+You should then be able to 'Build', 'Debug' and 'Flash' the project from the 'Actions' list on the nRF Connect view.
+
+### Connecting to the board via USB
+
+To communicate with the board, connect the board to the PC using a USB cable and then run: 
+
+```bash
+python3 usb_test_app.py /dev/ttyACM3 # replace with the actual device name
+```
+
+Note: If USB port permissions are required, temporarily enable them by running:
+
+```bash
+sudo chmod 666 /dev/ttyACM3 # replace with the actual device name
+```
+
+### Testing
+
+To run the project tests, connect the board to the PC using a USB cable and then run: 
+
+```bash
+pytest tests/                   # to run all tests at once
+pytest tests/<test_file>.py     # to run a specific test set only
+pytest tests/ -k <substr>       # to filter the tests executed by name
+```
 
 # Effort breakdown
 
-- Repository setup (ssh keys, .gitignore, README.md): 1h
-- ZephyrRTOS setup (CMake files, main.c, first build): 0.5h
-- USB Comm Device side (usb_comm.h + troubleshooting): 3h
-- USB Comm PC side (usb_comm.py): 1.5h
-- Sensor simulation functions (sim_sensor.h + troubleshooting): 4h
-- USB Commands (command_parser.h + troubleshooting): 2h
-- PyTest setup: 0.5h
-- Sensor simulation tests: 2h
-- Bugfixing: 1.5h
-- Ring buffer implementation (ring_buffer.h): 1h
-- Sensor thread (sensor_thread.h + troubleshooting): 3h
-- Data thread (data_thread.h): 1h
-- Ring buffer tests: 
+Setup (2h):
+- Project setup: 1.5h
+- PyTest setup:  0.5h
 
-- Total: 21h 
+Implementation (15.5):
+- USB Comm Device (+troubleshoot):      3.0h
+- USB Comm PC python script:            1.5h
+- USB Commands (+troubleshoot):         2.0h
+- Sensor simulation (+troubleshoot):    4.0h
+- Ring buffer implementation:           1.0h
+- Sensor thread (+troubleshoot):        3.0h
+- Data thread:                          1.0h
 
-# Other remarks
+Testing (4h):
+- Sensor simulation tests:  2.0h
+- Ring buffer tests:        0.5h
+- Bugfixing:                1.5h
+
+Documentation (1h):
+- README.md: 1h
+
+Total: 22.5h
