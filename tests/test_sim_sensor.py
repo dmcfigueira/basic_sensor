@@ -1,6 +1,6 @@
 # ********************************************************************************
 # 
-# Set of tests used to validate sensor data simulation.
+# Set of tests used to validate the simulation of sensor data.
 #
 # Created on Sat Nov 23 2024
 #
@@ -76,9 +76,7 @@ class TestSensorSimulation:
         usb.set_read_rate(10)
         usb.set_send_rate(10)
         data = usb.simulate_increasing_pattern(0, 1, 10)
-        for i in range(len(data)):
-            assert data[i] == i
-        assert len(data) == 11
+        assert data == [i for i in range(10 + 1)]
 
     def test_6_2_DataRate_DataIsOk_At100Hz(self):
         ''' Data is correctly simulated at 100Hz '''
@@ -86,9 +84,7 @@ class TestSensorSimulation:
         usb.set_read_rate(100)
         usb.set_send_rate(100)
         data = usb.simulate_increasing_pattern(0, 1, 100)
-        for i in range(len(data)):
-            assert data[i] == i
-        assert len(data) == 101
+        assert data == [i for i in range(100 + 1)]
         
     def test_6_3_DataRate_NumSamplesIsOk_At1000Hz(self):
         ''' Data is correctly simulated at 1000Hz '''
@@ -96,9 +92,7 @@ class TestSensorSimulation:
         usb.set_read_rate(1000)
         usb.set_send_rate(1000)
         data = usb.simulate_increasing_pattern(0, 1, 1000)
-        for i in range(len(data)):
-            assert data[i] == i
-        assert len(data) == 1001
+        assert data == [i for i in range(1000 + 1)]
 
     def test_6_4_DataRate_Duplicates_WhenDataRateIsLesserThanReadRate(self):
         ''' Duplicates happen when the data rate is lesser than the read rate '''
