@@ -1,5 +1,5 @@
 # Context
-This repository contains the source code for an example sensor project, which basically:
+This repository contains the source code for an example sensor project, which:
 
 - Simulates sensor data
 - Stores the simulated data into a ring buffer
@@ -12,7 +12,7 @@ The software is meant to be run on a [nRF5340 DK](https://www.nordicsemi.com/Pro
 
 For development I'll be using VSCode on a Linux PC, and the [nRF Connect SDK](https://www.nordicsemi.com/Products/Development-software/nRF-Connect-SDK).
 
-To interact with the device over USB I'll be using some basic Python code.
+To interact with the device over USB I'll be using a simple Python test script.
 
 For integration tests - which will be run with the PC connected to the device - I'll be using [PyTest](https://docs.pytest.org/en/stable/).
 

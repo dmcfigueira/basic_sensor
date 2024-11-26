@@ -50,7 +50,7 @@ class TestRingBuffer:
         assert RING_BUFFER_SIZE <= len(data) <= RING_BUFFER_SIZE + 1
         assert data[-RING_BUFFER_SIZE:] == [RING_BUFFER_SIZE + i for i in range(RING_BUFFER_SIZE)]
 
-    def test_1_1_IncreasedRate_NoDuplicates(self):
+    def test_2_1_IncreasedRate_NoDuplicates(self):
         ''' Missed samples happen when the data rate is bigger than the read rate '''
         usb.set_data_rate(10)
         usb.set_read_rate(10)
